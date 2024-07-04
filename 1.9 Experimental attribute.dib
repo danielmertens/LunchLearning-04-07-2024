@@ -1,0 +1,38 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# Experimental attribute
+
+Methods and types can now be marked with the `[Experimental]` attribute. This is used for features that are still being developed and are subject to major breaking changes. Don't use these features for production code.
+
+#!csharp
+
+using System.Diagnostics.CodeAnalysis;
+
+[Experimental("C001")]
+public void ExperimentalFunc() {
+    // Do something
+}
+
+[Experimental("C001")]
+public class ExperimentalType {
+    // Class implementation.
+}
+
+#!markdown
+
+The string in the attribute should be your internal code for the experimental feature. This will also be used when disabling the error.
+
+#!csharp
+
+var obj = new ExperimentalType();
+ExperimentalFunc();
+
+#!csharp
+
+#pragma warning disable C001
+var obj = new ExperimentalType();
+ExperimentalFunc();

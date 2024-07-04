@@ -1,0 +1,52 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# Performance
+
+https://devblogs.microsoft.com/dotnet/performance_improvements_in_net_7/
+
+https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-8/
+
+TLDR: A lot has been improved!
+
+#!markdown
+
+## Frozen Collections
+
+- `System.Collections.Immutable` -> Optimized for mutation
+- `System.Collections.Frozen` -> Optimized for reading
+
+#!csharp
+
+using System.Collections.Immutable;
+using System.Collections.Frozen;
+
+List<int> list = Enumerable.Range(0, 100).ToList();
+FrozenSet<int> frozenSet = list.ToFrozenSet();
+ImmutableHashSet<int> immutableHashSet = list.ToImmutableHashSet();
+
+Dictionary<int, int> dictionary = list.ToDictionary(x => x, x => x);
+FrozenDictionary<int, int> frozenDictionary = dictionary.ToFrozenDictionary();
+ImmutableDictionary<int, int> immutableDictionary = dictionary.ToImmutableDictionary();
+
+#!markdown
+
+### Performance of indexers
+https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-8/#frozen-collections
+
+| Method                    | Mean     | Ratio |
+|---------------------------|----------|-------|
+| ImmutableDictionaryGets   | 360.55us | 13.89 |
+| DictionaryGets            | 39.43us  | 1.52  |
+| FrozenDictionaryGets      | 25.95us  | 1.00  |
+
+#!markdown
+
+## Perforamce of adds
+| Method                     | Mean        | Ratio |
+|----------------------------|-------------|-------|
+| DictionaryAdds             | 478.961 ms | 1.000 |
+| ImmutableDictionaryAdds    | 4.067 ms   | 0.009 |

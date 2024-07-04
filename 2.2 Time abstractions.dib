@@ -1,0 +1,73 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# Time abstraction 
+
+New TimeProvider class and ITimer interface have been added.
+- Useful for testing time-dependent code.
+- Can be used to mock Task.Delay and Task.WaitAsync -> Microsoft.Extensions.TimeProvider.Testing nuget package with FakeTimeProvider.
+- Quite bulky though
+
+#!csharp
+
+public abstract class TimeProvider
+{
+    public static TimeProvider System { get; } = new SystemTimeProvider();
+    public DateTimeOffset GetLocalNow();
+    protected TimeProvider();
+    public TimeSpan GetElapsedTime(long startingTimestamp, long endingTimestamp);
+    public TimeSpan GetElapsedTime(long startingTimestamp) => GetElapsedTime(startingTimestamp, GetTimestamp());
+
+    public virtual DateTimeOffset GetUtcNow() => DateTimeOffset.UtcNow;
+    public virtual TimeZoneInfo LocalTimeZone => TimeZoneInfo.Local;
+    public virtual long TimestampFrequency => Stopwatch.Frequency;
+    public virtual long GetTimestamp() => Stopwatch.GetTimestamp();
+    public virtual ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period);
+}
+
+public interface ITimer : IDisposable, IAsyncDisposable
+{
+    bool Change(TimeSpan dueTime, TimeSpan period);
+}
+
+
+public partial class Task : IAsyncResult, IDisposable
+{
+    public static Task Delay(TimeSpan delay, TimeProvider timeProvider);
+}
+
+public partial class Task<TResult> : Task
+{
+    public new Task<TResult> WaitAsync(TimeSpan timeout, TimeProvider timeProvider);
+}
+
+#!markdown
+
+Notice that TimeProvider works with `DateTimeOffset` instead of `DateTime`.
+
+#!csharp
+
+var dtNow = DateTime.Now;
+Console.WriteLine($"{dtNow} {dtNow.Kind}");
+
+var dtoNow = DateTimeOffset.Now;
+Console.WriteLine(dtoNow.ToString());
+
+#!markdown
+
+## DateTimeOffset
+
+- Uniquely and unambiguously identify a single point in time. The DateTimeOffset type can be used to unambiguously define the meaning of "now", to log transaction times, to log the times of system or application events, and to record file creation and modification times.
+- Perform general date and time arithmetic.
+- Preserve multiple related times, as long as those times are stored as two separate values or as two members of a structure.
+
+
+## DateTime
+
+- Work with abstract dates and times.
+- Work with dates and times for which time zone information is missing.
+- Work with UTC dates and times only.
+- Perform date and time arithmetic, but are concerned with general results. For example, in an addition operation that adds six months to a particular date and time, it is often not important whether the result is adjusted for daylight saving time.

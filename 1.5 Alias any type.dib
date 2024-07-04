@@ -1,0 +1,29 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# Allow using alias directive to reference "any" kind of Type
+
+This can be usefull since this can lead to more readable code when complex types are declared at the top of the file.
+
+#!csharp
+
+// C# 11 and before
+using dt = System.DateTime;
+using mc = MyProject.Library.MyClass;
+
+// C# 12
+using Point = (int x, int y);
+using IntList = System.Collections.Generic.List<int>;
+using HashDictionary = System.Collections.Generic.Dictionary<int, string>;
+using IntMatrix = System.Collections.Generic.List<System.Collections.Generic.List<int>>;
+
+#!csharp
+
+// Special cases:
+using NullableRefType = string?; // not allowed
+using NullableValueType = int?; // allowed
+using NullableList = System.Collections.Generic.List<string?>; // allowed
+using testc<T> = System.Collections.Generic.List<T>; // not allowed

@@ -1,0 +1,27 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# Automatic parameter binding for DI components in API controllers
+
+#!csharp
+
+#r "nuget:Microsoft.DotNet.Interactive.AspNetCore, *-*"
+
+#!markdown
+
+Starting from DotNet 7, you no longer need the `[FromServices]` attribute on your parameters. ASP.NET Core understands that the interface or type should be loaded from the DI container.
+
+#!csharp
+
+[Route("[controller]")]
+[ApiController]
+public class SomeController : ControllerBase
+{
+    public ActionResult GetWithAttribute([FromServices] IDataService service) => Ok("Hello world");
+
+    [Route("OtherRoute")]
+    public ActionResult Get(IDataService service) => Ok("Hello world");
+}

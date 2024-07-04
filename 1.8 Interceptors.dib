@@ -1,0 +1,10 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# Interceptors
+
+The interceptor is an attribute that can be used to intercept code execution and replace a method execution with different code.
+For an example, see [here](./src/Examples.Interceptors/Program.cs)

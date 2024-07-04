@@ -1,0 +1,72 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# Dotnet SDK features
+
+With Dotnet 8, the SDK also gives us a few more options to work with.
+
+For example, it's now possible to get project properties in the CLI. This is useful for automation and scripting.
+
+Unfortunately there is very little documentation to be found on this feature.
+
+#!csharp
+
+dotnet build|publish --getProperty:OutputPath
+dotnet publish -p PublishProfile=DefaultContainer --getProperty:GeneratedContainerDigest
+dotnet publish -p PublishProfile=DefaultContainer --getTargetResult:YourTarget
+
+#!markdown
+
+New SDK options:
+
+--getProperty:<propertyName> - Get the value of the specified property
+--getItem:<itemName> - Get the value(s) of the specified item
+--getTargetResult - Get the return values of the targets that were specified via the -target option.
+
+#!markdown
+
+There is a new terminal logger available for those who like to build their projects via the CLI.
+This option hasn't been made default, but it is likely that it will become the devault logger in future versions.
+
+#!csharp
+
+dotnet build --tl
+
+#!markdown
+
+The SDK also provides a new place for your build artifacts. You can now easily set your preffered output location.
+
+By default, the following structure is created:
+
+![folder structure](./images/Artifact%20layout.jpg)
+
+You can set this however you want in the `Directory.Build.props` file.
+
+#!csharp
+
+<Project>
+  <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
+  <PropertyGroup>
+
+    <UseArtifactsOutput>true</UseArtifactsOutput> // To use the default artifacts output location
+    // OR
+    <ArtifactsOutput>$(MSBuildThisFileDirectory)MyArtifactsFolder\</ArtifactsOutput> // To use a custom artifacts output location
+
+  </PropertyGroup>
+</Project>
+
+#!markdown
+
+The dotnet CLI will now also show you vulnerabilities when building/restoring the project or adding packages. This is indicated as opt-in in the documentation but seems to be enabled by default.
+
+This will also be more visible for those that use the NuGet Package Manager in Visual Studio:
+
+![PackageManager](./images/PackageManager.jpg)
+![PackageManager](./images/PackageManagerWithDescription.jpg)
+
+#!csharp
+
+<NuGetAudit>true</NuGetAudit>

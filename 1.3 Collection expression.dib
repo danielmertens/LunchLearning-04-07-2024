@@ -1,0 +1,82 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"languageName":"csharp","name":"csharp"}]}}
+
+#!markdown
+
+# Collection expressions
+
+#!csharp
+
+// Helper function
+using System;
+public void Print(int[] arr) => Console.WriteLine("[{0}]", string.Join(", ", arr));
+
+#!csharp
+
+// Initialization
+var emptyArray1 = Array.Empty<int>();
+var array1 = new int[] { 1, 2, 3 };
+var emptyList1 = new List<int>();
+var list1 = new List<int> { 1, 2, 3 };
+
+
+// C# 12 - shorter Initialization
+int[] emptyArray2 = [];
+int[] array2 = [ 1, 2, 3 ];
+List<int> emptyList2 = [];
+List<int> list2 = [ 1, 2, 3 ];
+
+#!csharp
+
+// Combining arrays
+int[] row1 = [1, 2, 3];
+int[] row2 = [4, 5, 6];
+int[] row3 = [7, 8, 9];
+
+int[] combined1 = row1.Concat(row2).Concat(row3).ToArray();
+Print(combined1);
+
+// C# 12 -  spread opperator
+int[] combined2 = [ ..row1, ..row2, ..row3 ];
+Print(combined2);
+
+#!csharp
+
+// Add to an array
+int[] array3 = [ 1, 2, 3 ];
+
+array3 = [ ..array3, 4 ];
+array3 = [ 0, ..array3 ];
+
+Print(array3)
+
+#!markdown
+
+It's a lot faster to use the spread operator than using the array concat functionality.
+
+![Benchmark](./images/Benchmark%20spread%20operator.jpg)
+
+#!markdown
+
+A practical example: Imagine you need to create a list of labels and values, sourced from different locations/domains/services.
+
+#!csharp
+
+// Define some helper methods. Each method has specific logic to build their results.
+// A helper method can return one or multiple result objects.
+
+public record Line(string label, double value);
+public Line[] SourceA() => [];
+public Line SourceB() => new("Label B", 42);
+public Line[] SourceC() => [];
+
+// Previously we could aggregate these values in one array as follows
+var list = new List<Line>();
+list.AddRange(SourceA());
+list.Add(SourceB());
+list.AddRange(SourceC());
+
+
+// Now we can do it like this
+Line[] spreadList = [..SourceA(), SourceB(), ..SourceC()];

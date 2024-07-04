@@ -1,0 +1,36 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# Inline arrays
+
+This is a performance feature. You likely won't use this in your project unless you are writing really high performance code.
+
+#!csharp
+
+[System.Runtime.CompilerServices.InlineArray(10)]
+public struct Buffer
+{
+    private int _element0;
+}
+
+// buffer is an array but is not a reference type because it's declared as a struct.
+var buffer = new Buffer();
+for (int i = 0; i < 10; i++)
+{
+    buffer[i] = i;
+}
+
+ChangeBuffer(buffer); // Buffer is passed by value. So the change is not made.
+
+foreach (var i in buffer)
+{
+    Console.WriteLine(i);
+}
+
+void ChangeBuffer(Buffer buffer)
+{
+    buffer[0] = 10; // Doesn't work
+}

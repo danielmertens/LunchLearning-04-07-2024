@@ -1,0 +1,48 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"languageName":"csharp","name":"csharp"}]}}
+
+#!markdown
+
+# Ref readonly
+
+#!csharp
+
+// Previous versions introduced ref
+
+void Method(ref int refArgument)
+{
+    refArgument = refArgument + 44;
+}
+
+int number = 1;
+Method(ref number);
+Console.WriteLine(number);
+
+#!csharp
+
+// number is passed by reference but cannot be modified inside the method
+void InArgExample(in int number)
+{
+    // number = 19; // Compile error
+}
+
+int readonlyArgument = 44;
+// no need to specify `in` before the argument
+InArgExample(readonlyArgument);
+Console.WriteLine(readonlyArgument);
+
+#!csharp
+
+void ReadOnlyExample(ref readonly int number)
+{
+    // number = 19; // Compile error
+}
+
+int readonlyArgument = 44;
+ReadOnlyExample(ref readonlyArgument);
+Console.WriteLine(readonlyArgument);
+
+#!markdown
+
+Advice: Don't use 'in' anymore. Use ref readonly if you want the performance increase.

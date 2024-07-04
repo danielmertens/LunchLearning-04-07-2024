@@ -1,0 +1,25 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# AOT : Ahead-Of-Time Compilation
+
+- Support for x64 and arm64 architectures on macOS
+- Reduce file size, startup time and memory demand.
+- ASP.NET is now partially supported. Unsupported features are:
+    - ASP.NET MVC -> so only minimal API works
+    - Blazor Server
+    - SignalR
+    - Non-JWT Authentication options
+    - Session
+    - SPA
+
+``` xml
+<PropertyGroup>
+    <PublishAot>true</PublishAot>
+</PropertyGroup>
+```
+
+![AOT](./images/aot-runtime-trimmed-perf-chart.png)

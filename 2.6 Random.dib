@@ -1,0 +1,43 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"languageName":"csharp","name":"csharp"}]}}
+
+#!markdown
+
+# Randomness
+
+Both `System.Random` and `System.Security.Cryptography.RandomNumberGenerator`
+
+#!csharp
+
+// Boilerplate code to make the rest work...
+using System.Drawing;
+var options = new System.Text.Json.JsonSerializerOptions();
+options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+public void Write<T>(T data) 
+{ 
+    var json = System.Text.Json.JsonSerializer.Serialize(data, options); 
+    Console.WriteLine(json); 
+}
+
+#!markdown
+
+## GetItems<T>()
+
+#!csharp
+
+var colors = new []{KnownColor.Red, KnownColor.Blue, KnownColor.Yellow};
+var randomColors = System.Random.Shared.GetItems(colors, 10);
+
+Write(randomColors);
+
+#!markdown
+
+## Shuffle<T>()
+
+#!csharp
+
+var colors = new []{KnownColor.Red, KnownColor.Blue, KnownColor.Yellow, KnownColor.Green, KnownColor.Orange};
+System.Random.Shared.Shuffle(colors);
+
+Write(colors);

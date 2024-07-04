@@ -1,0 +1,100 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"languageName":"csharp","name":"csharp"}]}}
+
+#!markdown
+
+# Serialization
+
+- Built-in support for additional types
+- Naming policies
+- Interface hierarchies
+
+#!csharp
+
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+#!markdown
+
+## Additional types
+
+#!csharp
+
+Console.WriteLine(JsonSerializer.Serialize(Half.MaxValue));// 16 bit floating point (float 32, double 64)
+Console.WriteLine(JsonSerializer.Serialize(Int128.MaxValue));
+Console.WriteLine(JsonSerializer.Serialize(UInt128.MaxValue));
+Console.WriteLine(JsonSerializer.Serialize<ReadOnlyMemory<byte>>(new byte[] { 1, 2, 3 })); 
+Console.WriteLine(JsonSerializer.Serialize<Memory<int>>(new int[] { 1, 2, 3 }));
+
+#!markdown
+
+## Naming policy
+
+#!csharp
+
+var options = new JsonSerializerOptions
+{
+    PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+};
+Console.WriteLine(JsonSerializer.Serialize(new { PropertyName = "value" }, options));
+
+#!markdown
+
+## Using source generation
+
+(unfortunately source generation doesn't work in these polyglot files.)
+
+#!csharp
+
+public class WeatherForecast
+{
+    public DateTime Date { get; set; }
+    public int TemperatureCelsius { get; set; }
+    public string? Summary { get; set; }
+}
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(WeatherForecast))]
+internal partial class SourceGenerationContext : JsonSerializerContext
+{
+}
+
+#!markdown
+
+## Interface serialization
+
+#!csharp
+
+IBase baseValue = new DerivedImplement { Base = 0, Derived = 1 };
+IDerived derivedValue = new DerivedImplement { Base = 0, Derived = 1 };
+
+Console.WriteLine(JsonSerializer.Serialize(baseValue));
+Console.WriteLine(JsonSerializer.Serialize(derivedValue));
+
+public interface IBase { public int Base { get; set; } }
+public interface IDerived : IBase { public int Derived { get; set; } }
+public class DerivedImplement : IDerived
+{
+    public int Base { get; set; }
+    public int Derived { get; set; }
+}
+
+#!markdown
+
+## All changes
+
+#!markdown
+
+- Built-in support for additional types
+- Source generator
+- Interface hierarchies
+- Naming policies
+- Read-only properties
+- Disable reflection-based default
+- New JsonNode API methods
+- Non-public members
+- Streaming deserialization APIs
+- WithAddedModifier extension method
+- New JsonContent.Create overloads
+- Freeze a JsonSerializerOptions instance

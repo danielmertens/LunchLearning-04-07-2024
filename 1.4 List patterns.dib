@@ -1,0 +1,37 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# List patterns
+
+#!csharp
+
+int[] numbers = { 1, 2, 3 };
+
+Console.WriteLine(numbers is [1, 2, 3]);  // True
+Console.WriteLine(numbers is [1, 2, 4]);  // False
+Console.WriteLine(numbers is [1, 2, 3, 4]);  // False
+Console.WriteLine(numbers is [0 or 1, <= 2, >= 3]);  // True
+
+#!markdown
+
+It's also possible to use a slice and discard pattern.
+
+#!csharp
+
+Console.WriteLine(numbers is [1, _, _]);  // True
+Console.WriteLine(numbers is [_, 2, _]);  // True
+Console.WriteLine(numbers is [_, _, 3]);  // True
+Console.WriteLine(numbers is [1, _]);  // False
+Console.WriteLine(numbers is [_, 1, 2, 3]);  // False
+
+Console.WriteLine("");
+
+Console.WriteLine(numbers is [1, ..]);  // True
+Console.WriteLine(numbers is [.., 3]);  // True
+Console.WriteLine(numbers is [.., 1, 2, 3]);  // True
+//Console.WriteLine(numbers is [.., 2, ..]);  // Error: Slice can only be used from one side at a time.
+
+Console.WriteLine(numbers is [_, ..]); // True

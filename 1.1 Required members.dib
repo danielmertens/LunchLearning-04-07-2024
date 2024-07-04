@@ -1,0 +1,118 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!markdown
+
+# Required members
+
+#!markdown
+
+## Motivation
+
+#!csharp
+
+// When creating new classes we often create classes as below.
+public class PersonA
+{
+    public int Id { get; init; }
+    public string FirstName { get; init; }
+    public string LastName { get; init; }
+    public string Adress { get; set; }
+    public string PhoneNumber { get; set; }
+}
+
+#!markdown
+
+In this example the Id, FirstName and LastName property need to be filled in to be a valid object.
+
+The solution for this is currently to specify these properties in the constructor of Person.
+
+#!csharp
+
+public class PersonB
+{
+    public int Id { get; }
+    public string FirstName { get; }
+    public string LastName { get; }
+    public string Adress { get; set; }
+    public string PhoneNumber { get; set; }
+
+    public PersonB(int id, string firstName, string lastName)
+    {
+        Id = id;
+        FirstName = firstName;
+        LastName = lastName;
+    }
+}
+
+#!markdown
+
+Not a problem when we only have one class but it becomes tedious when this class is inherited from.
+
+#!csharp
+
+public class EmployeeB : PersonB
+{
+    public int EmployeeId { get; init; }
+    public EmployeeB(int id, int employeeId, string firstName, string lastName)
+        : base(id, firstName, lastName)
+    {
+        EmployeeId = employeeId;
+    }
+}
+
+#!markdown
+
+As you can see, to initialize an Emplyee class, there is a lot of repetition.
+
+In C# 11 the 'required' keyword was added to enforce initialization of values, either from a constructor of through object initialization.
+
+#!csharp
+
+public class PersonC
+{
+    public required int Id { get; init; }
+    public required string FirstName { get; init; }
+    public required string LastName { get; init; }
+    public string Adress { get; set; }
+    public string PhoneNumber { get; set; }
+}
+
+#!markdown
+
+This makes it a lot easier to implement inherited classes without worrying about properties not being filled in properly.
+
+#!csharp
+
+public class EmployeeC: PersonC
+{
+    public required int EmployeeId { get; init; }
+}
+
+#!csharp
+
+// var person1 = new PersonC(); // Not Allowed because required properties are not set.
+var person2 = new PersonC { Id = 1, FirstName = "Tony", LastName = "Stark" }; // Is allowed
+
+
+// var employee1 = new EmployeeC { EmployeeId = 1 }; // Not allowed. Missing required properties.
+var employee2 = new EmployeeC { Id = 2, EmployeeId = 2, FirstName = "Pepper", LastName = "Potts" }; // All required members are provided.
+
+#!markdown
+
+The required keyword can be used for classes, structs and record on both properties and fields.
+It can't be used in interfaces.
+
+#!csharp
+
+public struct Coordinate
+{
+    public required double X;
+    public required double Y;
+}
+
+public record Log
+{
+    public required string Message { get; init; }
+}
